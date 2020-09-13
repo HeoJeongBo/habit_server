@@ -25,6 +25,9 @@ SECRET_KEY = 'l6cjp99!1oa($412!3n(8!^*=yn!dg9d=l#i9^m(_dwe81246i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# custom auth
+AUTH_USER_MODEL = 'account.User'
+
 ALLOWED_HOSTS = []
 
 
@@ -40,6 +43,10 @@ INSTALLED_APPS = [
 
     # restframework
     'rest_framework',
+
+    # local apps
+    'board',
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -109,6 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # 기본적인 rest_framework settings
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',

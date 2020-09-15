@@ -12,18 +12,14 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'password2']
+        fields = ['email', 'password', 'full_name']
 
     def save(self):
         new_user = User(
-            email=self.validate_data['email'],
+            email=self.validated_data['email'],
+            full_name=self.validated_data['full_name'],
         )
         password = self.validated_data['password']
-        password2 = self.validated_data['password2']
-
-        if password != password2:
-            raise serializers.ValidationError(
-                {'password': 'Password must match.'})
 
         new_user.set_password(password)
         new_user.save()

@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     # local apps
     'board',
     'account',
+    'habit_category',
+    'habit',
 ]
 
 MIDDLEWARE = [

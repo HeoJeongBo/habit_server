@@ -28,6 +28,8 @@ DEBUG = True
 # custom auth
 AUTH_USER_MODEL = 'account.User'
 
+# permission 추가
+
 ALLOWED_HOSTS = []
 
 

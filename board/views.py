@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view
 
 # class based
 from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
 # generic view with mixin
 from rest_framework import generics
@@ -20,16 +21,25 @@ from rest_framework import mixins
 # Auth
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
 # Create your views here.
 
 
-class GenericAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin,
-                     mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin):
+class GenericAPIView(GenericViewSet, mixins.CreateModelMixin,
+                     mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,):
     serializer_class = BoardSerializer
     queryset = Board.objects.all()
 
-    lookup_field = 'id'
+    # lookup_field = 'id'
+
+    @action(detail=False)
+    def list_test(self, request):
+        print('list_test')
+        print(request)
+        print(request.query_params)
+        return Response(status=status.HTTP_200_OK)
 
     def get(self, request, id=None):
         print('get')

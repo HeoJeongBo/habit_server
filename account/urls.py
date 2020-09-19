@@ -1,7 +1,11 @@
-from django.conf.urls import url
-from account.views import registration_view, login_by_email
+from django.conf.urls import url, include
+from account.views import UserViewSet
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'account', UserViewSet)
+
 
 urlpatterns = [
-    url(r'^user/register/$', registration_view),
-    url(r'^user/login/$', login_by_email)
+    url(r'^', include(router.urls))
 ]

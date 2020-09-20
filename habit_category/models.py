@@ -7,4 +7,4 @@ class HabitCategory(models.Model):
     is_used = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.habit_name
+        return self.category_name

@@ -19,6 +19,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('board.urls')),
+    url(r'^', include('habit_category.urls')),
     url(r'^', include('account.urls')),
     url(r'^api/', include('habit_category.urls'))
 ]

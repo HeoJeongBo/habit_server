@@ -22,6 +22,21 @@ class HabitCategoryViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin,
         serializer = HabitCategorySerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def create(self, request, *args, **kwargs):
+        category_name = request.data['category_name']
+
+        try:
+            is_same_name_exist = HabitCategory.objects.get(
+                category_name=category_name
+            )
+        except HabitCategory.DoesNotExist:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response({'message': '해당 이름의 습관 카테고리가 이미 존재합니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=False, methods=['GET'])
     def get_by_name(self, request, *args, **kwargs):
         category_name = request.GET.get('name', None)

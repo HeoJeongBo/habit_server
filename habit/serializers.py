@@ -6,6 +6,15 @@ from account.serializers import UserSerializer
 class HabitSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
+    # validation
+    def validate(self, data):
+        print("In Habit Validation")
+        if self.instance:
+            print("update")
+        else:
+            print('create')
+        return data
+
     class Meta:
         model = Habit
         fields = (
@@ -20,17 +29,7 @@ class HabitSerializer(serializers.ModelSerializer):
     def __str__(self):
         return self.name
 
-    # validation
-    def validate(self, data):
-        print("In Habit Validation")
-        if self.instance:
-            print("update")
-            pass
-        else:
-            print('create')
-            pass
-        return data
-
+    #  date format 관련 warning 수정
     def create(self, validated_data):
         request = self.context.get('request')
         habit = Habit.objects.create(**validated_data, user=request.user)

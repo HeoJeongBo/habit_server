@@ -1,17 +1,21 @@
 from django.db import models
-from habit_category.models import HabitCategory
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import ArrayField
 from datetime import datetime
 
 # Create your models here.
 
 
 class Habit(models.Model):
-    habit_category = models.ForeignKey(
-        HabitCategory, related_name='habits', on_delete=models.CASCADE)
+
     due_date = models.DateField(auto_now_add=True)
     name = models.CharField(max_length=50)
-    actor = models.EmailField(max_length=200)
+    user = models.ForeignKey(
+        "account.User", on_delete=models.CASCADE, related_name="habits"
+    )
+    start_date = models.DateTimeField(default=datetime.now)
+    end_date = models.DateTimeField(default=datetime.now)
+    check_day_of_week = ArrayField(models.BooleanField(default=False), size=7,)
 
     def __str__(self):
         return self.name

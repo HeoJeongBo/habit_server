@@ -1,18 +1,37 @@
 from rest_framework import serializers
-from habit_category.models import HabitCategory
 from habit.models import Habit
+from account.serializers import UserSerializer
 
 
 class HabitSerializer(serializers.ModelSerializer):
-
-    habit_category = serializers.SlugRelatedField(
-        queryset=HabitCategory.objects.all(), slug_field='category_name',)
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Habit
         fields = (
-            'category',
             'due_date',
             'name',
-            'actor',
+            'user',
+            'start_date',
+            'end_date',
+            'check_day_of_week',
         )
+
+    def __str__(self):
+        return self.name
+
+    # validation
+    def validate(self, data):
+        print("In Habit Validation")
+        if self.instance:
+            print("update")
+            pass
+        else:
+            print('create')
+            pass
+        return data
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        habit = Habit.objects.create(**validated_data, user=request.user)
+        return habit

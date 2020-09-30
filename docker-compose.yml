@@ -5,13 +5,17 @@ services:
     image: postgres
     # 해당 부분 수정
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=my_habit
+      - POSTGRES_USER=my_habit
+      - POSTGRES_PASSWORD=myhabit
 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      bash -c "python manage.py makemigrations
+      && python manage.py migrate
+      && python manage.py runserver 0.0.0.0:8000
+      "
     volumes:
       - .:/app
     ports:

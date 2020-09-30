@@ -47,9 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # local apps
-    'board',
     'account',
-    'habit_category',
     'habit',
 ]
 
@@ -87,7 +85,7 @@ WSGI_APPLICATION = 'my_habit_server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-ALLOWED_HOSTS = ['localhost', 'db']
+ALLOWED_HOSTS = ['*']
 
 DATABASES = {
     'default': {
@@ -123,8 +121,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'my_habit_server.authenticate.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     )
 }
 

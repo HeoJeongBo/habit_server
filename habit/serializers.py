@@ -6,12 +6,16 @@ from account.serializers import UserSerializer
 class HabitSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
-    # validation
     def validate(self, data):
         if self.instance:
-            print("update")
+            start_date = data.get('start_date', self.instance.start_date)
+            end_date = data.get('end_date', self.instance.end_date)
         else:
-            print('create')
+            start_date = data.get('start_date')
+            end_date = data.get('end_date')
+        if start_date > end_date:
+            raise serializers.ValidationError(
+                "Start date should be before end date")
         return data
 
     class Meta:

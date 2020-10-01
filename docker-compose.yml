@@ -8,6 +8,8 @@ services:
       - POSTGRES_DB=my_habit
       - POSTGRES_USER=my_habit
       - POSTGRES_PASSWORD=myhabit
+    ports:
+      - "5432:5432"
 
   web:
     build: .

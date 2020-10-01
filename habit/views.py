@@ -1,5 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.decorators import action
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
@@ -16,7 +17,54 @@ class HabitViewSet(ModelViewSet):
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
 
-    # 자신의 habits
-    # update(partial)
-    # searching
-    #
+    # def get_permissions(self):
+
+    def get_habit(self, pk):
+        try:
+            habit = Habit.objects.get(pk=pk)
+            return habit
+        except Habit.DoesNotExist:
+            return None
+
+    @action(detail=False, methods=['POST'])
+    def my_habits(self, request):
+        user = request.user
+        my_habits = Habit.objects.filter(user=user)
+        serializer = self.get_serializer(my_habits, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['GET'])
+    def search(self, request):
+        user = request.user
+
+        due_date = request.GET.get("due_date", None)
+        start_date = request.GET.get("start_date", None)
+        end_date = request.GET.get("end_date", None)
+
+        filter_kwargs = {}
+        if(due_date is not None):
+            filter_kwargs["due_date__lte"] = due_date
+        if(start_date is not None):
+            filter_kwargs["start_date__gte"] = start_date
+        if(end_date is not None):
+            filter_kwargs["end_date__lte"] = end_date
+
+        try:
+            habits = Habit.objects.filter(**filter_kwargs, user=user)
+        except ValueError:
+            habits = Habit.objects.all()
+
+        serializer = HabitSerializer(habits, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['POST'])
+    def modify(self, request, pk):
+        habit = self.get_habit(pk)
+        if habit is not None:
+            if habit.user != request.user:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+            serializer = HabitSerializer(
+                habit, data=request.data, partial=True)
+            if serializer.is_valid():
+                modified_habit = serializer.save()
+                return Response(serializer.data)

@@ -8,7 +8,6 @@ class HabitSerializer(serializers.ModelSerializer):
 
     # validation
     def validate(self, data):
-        print("In Habit Validation")
         if self.instance:
             print("update")
         else:
@@ -18,6 +17,7 @@ class HabitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habit
         fields = (
+            'pk',
             'due_date',
             'name',
             'user',
@@ -25,9 +25,6 @@ class HabitSerializer(serializers.ModelSerializer):
             'end_date',
             'check_day_of_week',
         )
-
-    def __str__(self):
-        return self.name
 
     #  date format 관련 warning 수정
     def create(self, validated_data):

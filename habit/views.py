@@ -17,7 +17,8 @@ class HabitViewSet(ModelViewSet):
     queryset = Habit.objects.all()
 
     def get_permissions(self):
-        if self.action == 'modify' or self.action == my_habits:
+        permission_classes = []
+        if self.action == 'modify' or self.action == 'my_habits':
             permission_classes = [IsOwner]
         elif self.action == 'craete':
             permission_classes = [IsAuthenticated]
@@ -30,7 +31,7 @@ class HabitViewSet(ModelViewSet):
         except Habit.DoesNotExist:
             return None
 
-    @action(detail=False, methods=['POST'])
+    @action(detail=False, methods=['GET'])
     def my_habits(self, request):
         user = request.user
         my_habits = Habit.objects.filter(user=user)

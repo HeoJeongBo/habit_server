@@ -30,7 +30,7 @@ AUTH_USER_MODEL = 'account.User'
 
 # permission 추가
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -107,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthV alidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',

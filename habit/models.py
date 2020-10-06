@@ -8,7 +8,6 @@ from datetime import datetime
 
 class Habit(models.Model):
 
-    due_date = models.DateField(auto_now_add=True)
     name = models.CharField(max_length=50)
     user = models.ForeignKey(
         "account.User", on_delete=models.CASCADE, related_name="habits"

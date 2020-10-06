@@ -20,7 +20,7 @@ class HabitViewSet(ModelViewSet):
         permission_classes = []
         if self.action == 'modify' or self.action == 'my_habits':
             permission_classes = [IsOwner]
-        elif self.action == 'craete':
+        elif self.action == 'create':
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
@@ -42,13 +42,10 @@ class HabitViewSet(ModelViewSet):
     def search(self, request):
         user = request.user
 
-        due_date = request.GET.get("due_date", None)
         start_date = request.GET.get("start_date", None)
         end_date = request.GET.get("end_date", None)
 
         filter_kwargs = {}
-        if(due_date is not None):
-            filter_kwargs["due_date__lte"] = due_date
         if(start_date is not None):
             filter_kwargs["start_date__gte"] = start_date
         if(end_date is not None):

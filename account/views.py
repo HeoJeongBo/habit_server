@@ -41,8 +41,8 @@ class UserViewSet(ModelViewSet):
 
     @action(detail=False, methods=['POST'])
     def login(self, request):
-        email = request.POST.get('email', None)
-        password = request.POST.get('password', None)
+        email = request.data.get('email', None)
+        password = request.data.get('password', None)
 
         if not email or not password:
             return Response({'message': 'email, 비밀번호를 입혁해주세요'}, status=status.HTTP_400_BAD_REQUEST)

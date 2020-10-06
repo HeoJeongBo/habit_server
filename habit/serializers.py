@@ -22,7 +22,6 @@ class HabitSerializer(serializers.ModelSerializer):
         model = Habit
         fields = (
             'pk',
-            'due_date',
             'name',
             'user',
             'start_date',

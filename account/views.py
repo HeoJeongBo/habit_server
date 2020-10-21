@@ -19,6 +19,13 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
+    def get_user(self, pk):
+        try:
+            user = User.objects.get(pk=pk)
+            return user
+        except User.DoesNotExist:
+            return None
+
     def get_permissions(self):
         if self.action == "list":
             permission_classes = [IsAdminUser]
@@ -31,13 +38,24 @@ class UserViewSet(ModelViewSet):
             permission_classes = [IsSelf]
         return [permission() for permission in permission_classes]
 
-    @action(detail=False, methods=['POST'])
-    def registration(self, request):
+    # registration -> /account 로 수정
+    def create(self, request):
         serializer = RegisterUserSerializer(data=request.data)
         if serializer.is_valid():
             new_user = serializer.create()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        print("in destory")
+        try:
+            user = request.user
+            self.perform_destroy(user)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+            return Response({'message: User를 찾을 수 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # return super().destroy(request, *args, **kwargs)
 
     @action(detail=False, methods=['POST'])
     def login(self, request):

@@ -31,6 +31,7 @@ class UserViewSet(ModelViewSet):
         elif (
             self.action == "create"
             or self.action == "retrieve"
+            or self.action == "login"
         ):
             permission_classes = [AllowAny]
         else:

@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from account.models import User
 
 from account.serializers import RegisterUserSerializer, UserSerializer
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from account.permissions import IsSelf
 
 from rest_framework.viewsets import ModelViewSet
@@ -14,7 +14,6 @@ from django.conf import settings
 import jwt
 
 
-# Login JWT 로 수정
 class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -35,10 +34,9 @@ class UserViewSet(ModelViewSet):
         ):
             permission_classes = [AllowAny]
         else:
-            permission_classes = [IsSelf]
+            permission_classes = [IsSelf, IsAuthenticated]
         return [permission() for permission in permission_classes]
 
-    # registration -> /account 로 수정
     def create(self, request):
         serializer = RegisterUserSerializer(data=request.data)
         if serializer.is_valid():
@@ -47,15 +45,14 @@ class UserViewSet(ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
-        print("in destory")
-        try:
-            user = request.user
-            self.perform_destroy(user)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except User.DoesNotExist:
-            return Response({'message: User를 찾을 수 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
+        print('this method is not allowed')
+        return Response({'message': 'this method is not allowed'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # return super().destroy(request, *args, **kwargs)
+    @action(detail=False, methods=['POST'])
+    def withdraw(self, request):
+        user = request.user
+        self.perform_destroy(user)
+        return Response({'message': '회원탈퇴가 완료되었습니다'}, status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=['POST'])
     def login(self, request):

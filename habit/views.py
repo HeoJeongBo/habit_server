@@ -55,9 +55,9 @@ class HabitViewSet(ModelViewSet):
             return Response({'message': 'start_date, end_date를 모두 올바르게 입력해주세요'}, status=status.HTTP_400_BAD_REQUEST)
 
         filter_kwargs = {}
-        if(start_date is not None):
+        if start_date is not None:
             filter_kwargs["start_date__gte"] = dateTimeStartDate
-        if(end_date is not None):
+        if end_date is not None:
             filter_kwargs["end_date__lte"] = dateTimeEndDate
 
         try:

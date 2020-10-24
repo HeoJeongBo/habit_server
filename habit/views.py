@@ -11,6 +11,8 @@ from habit.permissions import IsOwner
 
 from account.models import User
 
+from utils.parsing_datetime import parsing_time_from_str
+
 
 class HabitViewSet(ModelViewSet):
     serializer_class = HabitSerializer
@@ -38,6 +40,7 @@ class HabitViewSet(ModelViewSet):
         serializer = self.get_serializer(my_habits, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    # 추후에 이 기능에 여러가지 붙일 예정
     @action(detail=False, methods=['GET'])
     def search(self, request):
         user = request.user
@@ -45,11 +48,17 @@ class HabitViewSet(ModelViewSet):
         start_date = request.GET.get("start_date", None)
         end_date = request.GET.get("end_date", None)
 
+        dateTimeStartDate = parsing_time_from_str(start_date)
+        dateTimeEndDate = parsing_time_from_str(end_date)
+
+        if dateTimeEndDate == None or dateTimeStartDate == None:
+            return Response({'message': 'start_date, end_date를 모두 올바르게 입력해주세요'}, status=status.HTTP_400_BAD_REQUEST)
+
         filter_kwargs = {}
         if(start_date is not None):
-            filter_kwargs["start_date__gte"] = start_date
+            filter_kwargs["start_date__gte"] = dateTimeStartDate
         if(end_date is not None):
-            filter_kwargs["end_date__lte"] = end_date
+            filter_kwargs["end_date__lte"] = dateTimeEndDate
 
         try:
             habits = Habit.objects.filter(**filter_kwargs, user=user)

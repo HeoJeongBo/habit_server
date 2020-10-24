@@ -13,6 +13,9 @@ class HabitSerializer(serializers.ModelSerializer):
         else:
             start_date = data.get('start_date')
             end_date = data.get('end_date')
+            if start_date is None or end_date is None:
+                raise serializers.ValidationError(
+                    "start, end date is required")
         if start_date > end_date:
             raise serializers.ValidationError(
                 "Start date should be before end date")
@@ -29,7 +32,6 @@ class HabitSerializer(serializers.ModelSerializer):
             'check_day_of_week',
         )
 
-    #  date format 관련 warning 수정
     def create(self, validated_data):
         request = self.context.get('request')
         habit = Habit.objects.create(**validated_data, user=request.user)

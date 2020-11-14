@@ -12,8 +12,9 @@ class Habit(models.Model):
     user = models.ForeignKey(
         "account.User", on_delete=models.CASCADE, related_name="habits"
     )
-    start_date = models.DateTimeField(default=datetime.now)
-    end_date = models.DateTimeField(default=datetime.now)
+    habit_type = models.CharField(max_length=50)
+    start_date = models.DateField(default=datetime.now)
+    end_date = models.DateField(default=datetime.now)
     check_day_of_week = ArrayField(models.BooleanField(default=False), size=7,)
 
     def __str__(self):

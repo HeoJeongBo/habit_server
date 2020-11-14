@@ -18,7 +18,13 @@ class HabitViewSet(ModelViewSet):
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
 
+    def create(self, request, *args, **kwargs):
+        print(request.data.get('name'))
+        print('in create')
+        # return super().create(request, *args, **kwargs)
+
     def get_permissions(self):
+        print('get permissions')
         permission_classes = []
         if self.action == 'modify' or self.action == 'my_habits':
             permission_classes = [IsOwner, IsAuthenticated]

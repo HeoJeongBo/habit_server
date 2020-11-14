@@ -4,9 +4,11 @@ from account.serializers import UserSerializer
 
 
 class HabitSerializer(serializers.ModelSerializer):
+    print('in serializer')
     user = UserSerializer(read_only=True)
 
     def validate(self, data):
+        print('in validate')
         if self.instance:
             start_date = data.get('start_date', self.instance.start_date)
             end_date = data.get('end_date', self.instance.end_date)
@@ -33,6 +35,7 @@ class HabitSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
+        print('in create')
         request = self.context.get('request')
         habit = Habit.objects.create(**validated_data, user=request.user)
         return habit

@@ -28,6 +28,7 @@ class HabitSerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'name',
+            'habit_type',
             'user',
             'start_date',
             'end_date',
@@ -35,7 +36,6 @@ class HabitSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        print('in create')
         request = self.context.get('request')
         habit = Habit.objects.create(**validated_data, user=request.user)
         return habit
